@@ -1,5 +1,5 @@
 #define Name "BG Mods Installer"
-#define Version "1.0.0"
+#define Version "1.0.1"
 #define Publisher "Fantaz"
 #define URL "https://www.nexusmods.com/burglingnomes/mods"
 #define GameName "Burglin' Gnomes Demo"
@@ -77,20 +77,20 @@ Name: "thirdpersonview"; Description: "Third Person View - Adds a third-person c
 Source: "BepInEx\*"; DestDir: "{app}"; Components: bepinex; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; Downloaded mod files from temp directory
-Source: "{tmp}\99Gnomes.dll"; DestDir: "{app}\BepInEx\plugins"; Components: gnomes99; Flags: external
-Source: "{tmp}\BetterLobbies.dll"; DestDir: "{app}\BepInEx\plugins"; Components: betterlobbies; Flags: external
-Source: "{tmp}\ControllerSupport.dll"; DestDir: "{app}\BepInEx\plugins"; Components: controllersupport; Flags: external
-Source: "{tmp}\MoreHats.dll"; DestDir: "{app}\BepInEx\plugins"; Components: morehats; Flags: external
-Source: "{tmp}\SpawnMenu.dll"; DestDir: "{app}\BepInEx\plugins"; Components: spawnmenu; Flags: external
-Source: "{tmp}\3rdPersonView.dll"; DestDir: "{app}\BepInEx\plugins"; Components: thirdpersonview; Flags: external
+Source: "{tmp}\99Gnomes.dll"; DestDir: "{app}\BepInEx\plugins"; Components: gnomes99; Flags: external ignoreversion
+Source: "{tmp}\BetterLobbies.dll"; DestDir: "{app}\BepInEx\plugins"; Components: betterlobbies; Flags: external ignoreversion
+Source: "{tmp}\ControllerSupport.dll"; DestDir: "{app}\BepInEx\plugins"; Components: controllersupport; Flags: external ignoreversion
+Source: "{tmp}\MoreHats.dll"; DestDir: "{app}\BepInEx\plugins"; Components: morehats; Flags: external ignoreversion
+Source: "{tmp}\SpawnMenu.dll"; DestDir: "{app}\BepInEx\plugins"; Components: spawnmenu; Flags: external ignoreversion
+Source: "{tmp}\3rdPersonView.dll"; DestDir: "{app}\BepInEx\plugins"; Components: thirdpersonview; Flags: external ignoreversion
 
-Source: "{tmp}\DOOM1.WAD"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external
-Source: "{tmp}\ManagedDoomLib.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external
-Source: "{tmp}\System.Buffers.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external
-Source: "{tmp}\System.Memory.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external
-Source: "{tmp}\System.Numerics.Vectors.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external
-Source: "{tmp}\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external
-Source: "{tmp}\doom_gnome.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external
+Source: "{tmp}\DOOM1.WAD"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
+Source: "{tmp}\ManagedDoomLib.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
+Source: "{tmp}\System.Buffers.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
+Source: "{tmp}\System.Memory.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
+Source: "{tmp}\System.Numerics.Vectors.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
+Source: "{tmp}\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
+Source: "{tmp}\doom_gnome.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
 
 [Dirs]
 ; Ensure plugins directory exists
