@@ -34,7 +34,7 @@ AppUpdatesURL={#URL}
 ; Version Info
 VersionInfoVersion={#Version}.0
 VersionInfoCompany={#Publisher}
-VersionInfoDescription=Mods Downloader & Installer
+VersionInfoDescription=Mods Downloader & Installer for {#GameName}
 VersionInfoCopyright=Copyright (C) 2026 {#Publisher}
 VersionInfoProductName={#Name}
 VersionInfoProductVersion={#Version}
@@ -201,8 +201,8 @@ begin
 end;
 
 [Messages]
-WelcomeLabel2=This will install BepInEx and Burglin' Gnomes mods on your computer.%n%nAll mods will be downloaded from GitHub (requires internet connection).%n%nYou can choose which mods to install.%n%nIt is recommended that you close Burglin' Gnomes Demo before continuing.
-SelectDirLabel3=Setup will install BepInEx 5 and your selected mods into the following folder.%n%nThis MUST be your Burglin' Gnomes Demo installation folder.
+WelcomeLabel2=This will install BepInEx and Burglin' Gnomes mods on your computer.%n%nAll mods will be downloaded from GitHub (requires internet connection).%n%nYou can choose which mods to install.%n%nIt is recommended that you close {#GameName} before continuing.
+SelectDirLabel3=Setup will install BepInEx 5 and your selected mods into the following folder.%n%nThis MUST be your {#GameName} installation folder.
 SelectDirBrowseLabel=To continue, click Next. If the path below is incorrect, click Browse to select your game folder.
-FinishedLabel=Installation complete!%n%nSelected mods have been installed. Launch Burglin' Gnomes Demo to use them.
+FinishedLabel=Installation complete!%n%nSelected mods have been installed. Launch {#GameName} to use them.
 ConfirmUninstall=Are you sure you want to completely remove %1 and BepInEx?%n%nWARNING: This will remove BepInEx and may affect other mods.
