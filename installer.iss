@@ -95,7 +95,6 @@ Source: "{tmp}\doom_gnome.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Component
 [Dirs]
 ; Ensure plugins directory exists
 Name: "{app}\BepInEx\plugins"; Permissions: users-modify
-Name: "{app}\BepInEx\plugins\DOOM"; Permissions: users-modify
 
 [Code]
 var
