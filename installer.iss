@@ -1,9 +1,18 @@
+#define ReadVersion(Path) \
+  Local[0] = FileOpen(Path), \
+  Local[1] = Trim(FileRead(Local[0])), \
+  FileClose(Local[0]), \
+  Local[1]
+
 #define Name "BG Mods Installer"
-#define Version "1.0.1"
+#define Version ReadVersion(SourcePath + "\\version.txt")
+#define VersionURL "https://raw.githubusercontent.com/FaNt4zMa/burglin-gnomes-mods/refs/heads/main/version.txt"
+#define InstallerURL "https://github.com/FaNt4zMa/burglin-gnomes-mods/releases/latest"
 #define Publisher "Fantaz"
 #define URL "https://www.nexusmods.com/burglingnomes/mods"
 #define GameName "Burglin' Gnomes Demo"
 #define GameExeName "Gnomium.exe"
+#define Year "2026"
 
 ; GitHub repository URLs
 #define GitHub99Gnomes "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/99-Gnomes/99Gnomes.dll"
@@ -35,7 +44,7 @@ AppUpdatesURL={#URL}
 VersionInfoVersion={#Version}.0
 VersionInfoCompany={#Publisher}
 VersionInfoDescription=Mods Downloader & Installer for {#GameName}
-VersionInfoCopyright=Copyright (C) 2026 {#Publisher}
+VersionInfoCopyright=Copyright (C) {#Year} {#Publisher}
 VersionInfoProductName={#Name}
 VersionInfoProductVersion={#Version}
 
@@ -46,7 +55,7 @@ DisableProgramGroupPage=yes
 DisableDirPage=no
 DisableWelcomePage=no
 OutputDir=output
-OutputBaseFilename=BG_Mods_Installer_v{#Version}
+OutputBaseFilename={#Name}_v{#Version}
 Compression=lzma2/ultra64
 SolidCompression=yes
 
@@ -100,11 +109,77 @@ Name: "{app}\BepInEx\plugins"; Permissions: users-modify
 var
   DownloadPage: TDownloadWizardPage;
 
+// Update checker
+function GetLatestInstallerVersion: String;
+var
+  WinHTTP: Variant;
+begin
+  Result := '';
+  try
+    WinHTTP := CreateOleObject('WinHttp.WinHttpRequest.5.1');
+    WinHTTP.Open('GET', '{#VersionURL}', False);
+    WinHTTP.Send('');
+    if WinHTTP.Status = 200 then
+      Result := Trim(String(WinHTTP.ResponseText));
+  except
+    Result := '';
+  end;
+end;
+
+function IsNewerVersion(Latest, Current: String): Boolean;
+var
+  LatestParts, CurrentParts: TStringList;
+  i, L, C: Integer;
+begin
+  Result := False;
+  LatestParts := TStringList.Create;
+  CurrentParts := TStringList.Create;
+  try
+    LatestParts.Delimiter := '.';
+    LatestParts.DelimitedText := Latest;
+    CurrentParts.Delimiter := '.';
+    CurrentParts.DelimitedText := Current;
+    for i := 0 to LatestParts.Count - 1 do
+    begin
+      L := StrToIntDef(LatestParts[i], 0);
+      C := StrToIntDef(CurrentParts[i], 0);
+      if L > C then begin Result := True; Exit; end;
+      if L < C then Exit;
+    end;
+  finally
+    LatestParts.Free;
+    CurrentParts.Free;
+  end;
+end;
+
+procedure CheckForInstallerUpdate;
+var
+  Latest: String;
+  ErrCode: Integer;
+begin
+  Latest := GetLatestInstallerVersion;
+  if (Latest = '') then Exit; // silently skip if offline
+  
+  if IsNewerVersion(Latest, '{#Version}') then
+  begin
+    if MsgBox('A newer version of the installer is available (v' + Latest + ').' + #13#10#13#10 +
+              'Would you like to open the download page?',
+              mbConfirmation, MB_YESNO) = IDYES then
+    begin
+      ShellExec('open', '{#InstallerURL}', '', '', SW_SHOWNORMAL, ewNoWait, ErrCode);
+      Abort; // close the old installer
+    end;
+  end;
+end;
+
 procedure InitializeWizard();
 var
   InfoPage: TOutputMsgMemoWizardPage;
   ModListText: String;
 begin
+  // Check for update
+  CheckForInstallerUpdate;
+
   // Create download page
   DownloadPage := CreateDownloadPage('Downloading Mods', 'Downloading the latest mod files from GitHub...', nil);
   
