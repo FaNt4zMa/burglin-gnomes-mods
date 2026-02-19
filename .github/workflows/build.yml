@@ -1,0 +1,26 @@
+name: Build Installer
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Build Inno Setup installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        with:
+          path: installer.iss
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BG-Mods-Installer
+          path: output/*.exe
+          retention-days: 1
