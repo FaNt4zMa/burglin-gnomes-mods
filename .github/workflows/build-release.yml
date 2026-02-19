@@ -2,8 +2,11 @@ name: Build Installer
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -18,9 +21,11 @@ jobs:
         with:
           path: installer.iss
       
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: BG-Mods-Installer
-          path: output/*.exe
-          retention-days: 1
+          files: output/*.exe
+          tag_name: ${{ github.ref_name }}
+          name: BG Mods Installer ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
