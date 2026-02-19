@@ -14,7 +14,7 @@ Easy-to-use installer for a collection of Burglin' Gnomes mods. Select the mods 
 
 ## 🚀 How to Install
 
-1. Download the installer from the pinned message in the Discord server
+1. Download the installer from the [release](https://github.com/FaNt4zMa/burglin-gnomes-mods/releases/latest) page
 2. Run the installer and follow the prompts. It will validate your game directory and let you choose which mods to install.
 3. Launch the game and enjoy!
 
