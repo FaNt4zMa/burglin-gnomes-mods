@@ -1,0 +1,36 @@
+name: Package DOOM Mod
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'DOOM/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Create DOOM Zip
+        run: |
+          mkdir dist
+          cd DOOM
+          zip -r ../dist/DOOM.zip . -x "version.txt"
+          cd ..
+
+      - name: Deploy to dist branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: dist
+          publish_dir: ./dist
+          force_orphan: true
+          enable_jekyll: true
+          commit_message: "Update DOOM.zip [skip ci]"
