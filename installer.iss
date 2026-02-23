@@ -21,14 +21,7 @@
 #define GitHubMoreHats "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/More-Hats/MoreHats.dll"
 #define GitHubSpawnMenu "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/Spawn-Menu/SpawnMenu.dll"
 #define GitHubThirdPerson "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/ThirdPerson-View/3rdPersonView.dll"
-
-#define GitHubDoom1 "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/DOOM/DOOM1.WAD"
-#define GitHubDoom2 "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/DOOM/ManagedDoomLib.dll"
-#define GitHubDoom3 "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/DOOM/System.Buffers.dll"
-#define GitHubDoom4 "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/DOOM/System.Memory.dll"
-#define GitHubDoom5 "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/DOOM/System.Numerics.Vectors.dll"
-#define GitHubDoom6 "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/DOOM/System.Runtime.CompilerServices.Unsafe.dll"
-#define GitHubDoom7 "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/main/DOOM/doom_gnome.dll"
+#define GitHubDoom "https://github.com/FaNt4zMa/burglin-gnomes-mods/raw/refs/heads/dist/DOOM.zip"
 
 [Setup]
 ; Basic App Info
@@ -93,13 +86,7 @@ Source: "{tmp}\MoreHats.dll"; DestDir: "{app}\BepInEx\plugins"; Components: more
 Source: "{tmp}\SpawnMenu.dll"; DestDir: "{app}\BepInEx\plugins"; Components: spawnmenu; Flags: external ignoreversion
 Source: "{tmp}\3rdPersonView.dll"; DestDir: "{app}\BepInEx\plugins"; Components: thirdpersonview; Flags: external ignoreversion
 
-Source: "{tmp}\DOOM1.WAD"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
-Source: "{tmp}\ManagedDoomLib.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
-Source: "{tmp}\System.Buffers.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
-Source: "{tmp}\System.Memory.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
-Source: "{tmp}\System.Numerics.Vectors.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
-Source: "{tmp}\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
-Source: "{tmp}\doom_gnome.dll"; DestDir: "{app}\BepInEx\plugins\DOOM"; Components: doom; Flags: external ignoreversion
+; DOOM zip will be extracted via code section
 
 [Dirs]
 ; Ensure plugins directory exists
@@ -169,6 +156,44 @@ begin
       ShellExec('open', '{#InstallerURL}', '', '', SW_SHOWNORMAL, ewNoWait, ErrCode);
       Abort; // close the old installer
     end;
+  end;
+end;
+
+// Unzip multi-file mods
+function ExtractModZip(ModName: String): Boolean;
+var
+  ResultCode: Integer;
+  ZipPath, DestPath: String;
+begin
+  Result := True;
+  
+  ZipPath := ExpandConstant('{tmp}\' + ModName + '.zip');
+  DestPath := ExpandConstant('{app}\BepInEx\plugins\' + ModName);
+  
+  if not FileExists(ZipPath) then Exit; // Skip if not downloaded
+  
+  // Create destination directory
+  if not ForceDirectories(DestPath) then
+  begin
+    MsgBox('Failed to create ' + ModName + ' directory.', mbError, MB_OK);
+    Result := False;
+    Exit;
+  end;
+  
+  // Extract using tar
+  if not Exec('tar.exe', '-xf "' + ZipPath + '" -C "' + DestPath + '"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) or (ResultCode <> 0) then
+  begin
+    MsgBox('Failed to extract ' + ModName + ' files. Error code: ' + IntToStr(ResultCode), mbError, MB_OK);
+    Result := False;
+  end;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssPostInstall then
+  begin
+    if WizardIsComponentSelected('doom') then
+      ExtractModZip('DOOM');
   end;
 end;
 
@@ -244,15 +269,7 @@ begin
       DownloadPage.Add('{#GitHubThirdPerson}', '3rdPersonView.dll', '');
     
     if WizardIsComponentSelected('doom') then
-      begin
-        DownloadPage.Add('{#GitHubDoom1}', 'DOOM1.WAD', '');
-        DownloadPage.Add('{#GitHubDoom2}', 'ManagedDoomLib.dll', '');
-        DownloadPage.Add('{#GitHubDoom3}', 'System.Buffers.dll', '');
-        DownloadPage.Add('{#GitHubDoom4}', 'System.Memory.dll', '');
-        DownloadPage.Add('{#GitHubDoom5}', 'System.Numerics.Vectors.dll', '');
-        DownloadPage.Add('{#GitHubDoom6}', 'System.Runtime.CompilerServices.Unsafe.dll', '');
-        DownloadPage.Add('{#GitHubDoom7}', 'doom_gnome.dll', '');
-      end;
+      DownloadPage.Add('{#GitHubDoom}', 'DOOM.zip', '');
 
     // Download files
     DownloadPage.Show;
